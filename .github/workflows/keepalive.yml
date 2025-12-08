@@ -3,7 +3,7 @@ name: KeepAlive
 on:
   schedule:
     - cron: '0 0 1 * *'  # 每月1号运行
-  workflow_dispatch:     # 允许手动运行
+  workflow_dispatch:      # 允许手动运行
 
 jobs:
   keepalive-job:
@@ -13,11 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          persist-credentials: false   # 必须关掉默认验证，否则会冲突
+          persist-credentials: false  # 必须关掉默认验证，否则会冲突
 
       - name: Keepalive Workflow
+        # 👇 关键修改：这里必须用 v2，之前的 v1 已经被 GitHub 彻底封杀
         uses: gautamkrishnar/keepalive-workflow@v2
         with:
-          # 使用你刚才添加的那个 Secret (必须完全一致)
+          # 👇 这里对应你在 Settings 里添加的 Secret 名字 (PAT)
           gh_token: ${{ secrets.PAT }}
           commit_message: "Automated keep-alive with PAT"
