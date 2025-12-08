@@ -1,18 +1,21 @@
-name: KeepAlive - Prevent 60 Day Timeout
+name: KeepAlive
 
 on:
   schedule:
-    - cron: '0 0 1 * *'  # 每月1号 00:00 UTC（可改）
-  workflow_dispatch:      # 可手动触发（备用）
+    - cron: '0 0 1 * *'  # 每月1号运行一次
+  workflow_dispatch:     # 允许手动运行
+
+permissions:
+  contents: write        # 必须给写权限，否则无法提交代码
 
 jobs:
-  wakeup:
+  keepalive-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger run.yml workflow
-        run: |
-          curl -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/actions/workflows/run.yml/dispatches \
-            -d '{"ref":"main"}'
+      - uses: actions/checkout@v3
+      
+      - name: Keepalive Workflow
+        uses: gautamkrishnar/keepalive-workflow@v1
+        with:
+          # 下面这行可以自定义提交信息，如果不写默认是 "Automated keep-alive"
+          commit_message: "Automatic keep-alive loop to prevent 60-day timeout"
