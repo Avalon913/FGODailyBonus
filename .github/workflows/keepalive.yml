@@ -2,20 +2,22 @@ name: KeepAlive
 
 on:
   schedule:
-    - cron: '0 0 1 * *'  # 每月1号运行一次
+    - cron: '0 0 1 * *'  # 每月1号运行
   workflow_dispatch:     # 允许手动运行
-
-permissions:
-  contents: write        # 必须给写权限，否则无法提交代码
 
 jobs:
   keepalive-job:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
-      
+        with:
+          persist-credentials: false   # 必须关掉默认验证，否则会冲突
+
       - name: Keepalive Workflow
         uses: gautamkrishnar/keepalive-workflow@v1
         with:
-          # 下面这行可以自定义提交信息，如果不写默认是 "Automated keep-alive"
-          commit_message: "Automatic keep-alive loop to prevent 60-day timeout"
+          # 使用你刚才添加的那个 Secret (必须完全一致)
+          gh_token: ${{ secrets.PAT }}
+          commit_message: "Automated keep-alive with PAT"
