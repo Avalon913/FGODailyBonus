@@ -16,7 +16,7 @@ jobs:
           persist-credentials: false   # 必须关掉默认验证，否则会冲突
 
       - name: Keepalive Workflow
-        uses: gautamkrishnar/keepalive-workflow@v1
+        uses: gautamkrishnar/keepalive-workflow@v2
         with:
           # 使用你刚才添加的那个 Secret (必须完全一致)
           gh_token: ${{ secrets.PAT }}
